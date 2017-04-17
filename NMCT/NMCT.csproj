@@ -168,16 +168,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Controllers\TrailsController.cs" />
+    <Compile Include="CustomAttribute\AuthorizeOrRedirectAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704170138138_init.cs" />
-    <Compile Include="Migrations\201704170138138_init.Designer.cs">
-      <DependentUpon>201704170138138_init.cs</DependentUpon>
+    <Compile Include="Migrations\201704171549218_init.cs" />
+    <Compile Include="Migrations\201704171549218_init.Designer.cs">
+      <DependentUpon>201704171549218_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704171615153_update1.cs" />
+    <Compile Include="Migrations\201704171615153_update1.Designer.cs">
+      <DependentUpon>201704171615153_update1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -251,7 +257,6 @@
     <Content Include="Views\Trails\Details.cshtml" />
     <Content Include="Views\Trails\Edit.cshtml" />
     <Content Include="Views\Trails\Index.cshtml" />
-    <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Manage\Edit.cshtml" />
     <Content Include="Views\Reviews\Create.cshtml" />
     <Content Include="Views\Reviews\Delete.cshtml" />
@@ -259,6 +264,11 @@
     <Content Include="Views\Reviews\Edit.cshtml" />
     <Content Include="Views\Reviews\Index.cshtml" />
     <Content Include="Views\Reviews\ListOfReviewsByTrail.cshtml" />
+    <Content Include="Views\Account\UserManagement.cshtml" />
+    <Content Include="Views\Account\RolesManagement.cshtml" />
+    <Content Include="Views\Error\AccessDenied.cshtml" />
+    <Content Include="Views\Account\EditUser.cshtml" />
+    <Content Include="Views\Account\CreateUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -272,8 +282,11 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704170138138_init.resx">
-      <DependentUpon>201704170138138_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704171549218_init.resx">
+      <DependentUpon>201704171549218_init.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704171615153_update1.resx">
+      <DependentUpon>201704171615153_update1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

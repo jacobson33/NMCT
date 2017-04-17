@@ -10,6 +10,13 @@ namespace NMCT.Models
         public string Email { get; set; }
     }
 
+    public class RolesViewModel
+    {
+        public string Id { get; set; }
+        [Required]
+        public string Name { get; set; }
+    }
+
     public class ExternalLoginListViewModel
     {
         public string ReturnUrl { get; set; }

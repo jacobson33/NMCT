@@ -37,5 +37,9 @@ namespace NMCT.Models
         }
 
         public System.Data.Entity.DbSet<NMCT.Models.ManageUserViewModel> ManageUserViewModels { get; set; }
+
+        //public System.Data.Entity.DbSet<NMCT.Models.ApplicationUser> ApplicationUsers { get; set; }
+
+        public System.Data.Entity.DbSet<NMCT.Models.RolesViewModel> RolesViewModels { get; set; }
     }
 }

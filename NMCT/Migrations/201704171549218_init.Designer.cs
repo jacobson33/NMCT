@@ -13,7 +13,7 @@ namespace NMCT.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201704170138138_init"; }
+            get { return "201704171549218_init"; }
         }
         
         string IMigrationMetadata.Source

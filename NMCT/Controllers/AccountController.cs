@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NMCT.Models;
+using NMCT.CustomAttribute;
 
 namespace NMCT.Controllers
 {
@@ -50,6 +51,12 @@ namespace NMCT.Controllers
             {
                 _userManager = value;
             }
+        }
+
+        [HttpGet]
+        public ActionResult Index()
+        {
+            return RedirectToAction("UserManagement");
         }
 
         //
@@ -174,18 +181,34 @@ namespace NMCT.Controllers
             return View(model);
         }
 
-
-        /*[HttpGet]
-        public ActionResult Edit()
+        [HttpGet]
+        public ActionResult RolesManagement()
         {
-            var userId = User.Identity.GetUserId();
-            var user = UserManager.FindById(userId);
-            if (user == null)
-            {
-                return View("ForgotPasswordConfirmation");
-            }
+            var db = new ApplicationDbContext();
+            var roles = db.Roles.ToList();
+            return View(roles);
+        }
 
-            EditUserViewModel model = new EditUserViewModel();
+        #region User Management
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        public ActionResult UserManagement()
+        {
+            var db = new ApplicationDbContext();
+            var users = db.Users.ToList();
+
+            return View(users);
+        }
+
+        //edit
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        public ActionResult EditUser(string id)
+        {
+            var db = new ApplicationDbContext();
+            var user = db.Users.Find(id);
+            var model = new ManageUserViewModel();
+
             model.Id = user.Id;
             model.UserName = user.UserName;
             model.Email = user.Email;
@@ -193,9 +216,9 @@ namespace NMCT.Controllers
             return View(model);
         }
 
-        //edit
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id, UserName, Email, Password, ConfirmPassword")] EditUserViewModel userModel)
+        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        public ActionResult EditUser([Bind(Include = "Id, UserName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
         {
             if (ModelState.IsValid)
             {
@@ -211,12 +234,47 @@ namespace NMCT.Controllers
                 db.Entry(user).State = System.Data.Entity.EntityState.Modified;
                 db.SaveChanges();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("UserManagement");
             }
             return View(userModel);
         }
-        */
 
+        //create
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        public ActionResult CreateUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        public async Task<ActionResult> CreateUser(ManageUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    AccountType = 99
+                };
+
+                var result = await UserManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    UserManager.AddToRole(user.Id, "User");
+                    return RedirectToAction("UserManagement", "Account");
+                }
+            }
+            return View(model);
+        }
+
+        #endregion
+
+        #region Extra
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -467,7 +525,7 @@ namespace NMCT.Controllers
 
             base.Dispose(disposing);
         }
-
+        #endregion
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
