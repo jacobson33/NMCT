@@ -1,0 +1,49 @@
+﻿@model IEnumerable<NMCT.Models.Trail>
+
+@{
+    ViewBag.Title = "Trails";
+}
+
+<h2>Trails</h2>
+
+@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+{
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.County)
+        </th>
+        <th>
+            Rating
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.ActionLink(@Html.DisplayFor(modelItem => item.Name).ToString(), "Details", new { id = item.TrailID })
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.County)
+        </td>
+        <td>
+            @Html.ActionLink("Reviews", "ListOfReviewsByTrail", "Reviews", new { id = item.TrailID }, null)
+        </td>
+        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TrailID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TrailID })
+            </td>
+        }
+    </tr>
+}
+</table>

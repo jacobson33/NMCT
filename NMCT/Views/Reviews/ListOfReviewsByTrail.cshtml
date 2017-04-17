@@ -1,0 +1,24 @@
+﻿@model IEnumerable<NMCT.Models.Review>
+
+@{
+    ViewBag.Title = "Reviews";
+}
+
+<h2>List of Reviews for @ViewBag.TrailName</h2>
+
+<table class="table">
+    @foreach (NMCT.Models.Review review in Model)
+    {
+        <tr>
+            <td>
+                <hr />
+                <strong>@Html.DisplayFor(modelItem => review.Title)</strong> - by @Html.DisplayFor(modelItem => review.UserName)<br />
+                @Html.DisplayFor(modelItem => review.DateCreated) <br />
+                @Html.DisplayFor(modelItem => review.Content) <br />
+            </td>
+        </tr>
+    }
+</table>
+
+@Html.ActionLink("Return to previous page", "Index", "Trails");
+

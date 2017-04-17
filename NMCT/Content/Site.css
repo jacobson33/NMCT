@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background: url("Images/bg2.jpg");
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -21,4 +22,34 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.jumbotron {
+    background-color: #303030;
+    background-color: rgba(48,48,48,0.0);
+}
+.body-content {
+    background-color: rgba(48,48,48,0.95);
+    border-radius: 0 0 10px 10px;
+}
+
+
+/* Animations */
+body {
+  -webkit-animation: background 120s cubic-bezier(1,0,0,1) infinite;
+  animation: background 120s cubic-bezier(1,0,0,1) infinite;  
+}
+
+@-webkit-keyframes background {
+  0% { background: url("Images/bg2.jpg"); }
+  33% { background: url("Images/bg3.jpg"); }  
+  67% { background: url("Images/bg1.jpg"); }
+  100% { background: url("Images/bg2.jpg"); }
+}
+
+@keyframes background {
+  0% { background: url("Images/bg2.jpg"); }
+  33% { background: url("Images/bg3.jpg"); }  
+  67% { background: url("Images/bg1.jpg"); }
+  100% { background: url("Images/bg2.jpg"); }
 }

@@ -99,6 +99,47 @@ namespace NMCT.Controllers
             return RedirectToAction("ManageLogins", new { Message = message });
         }
 
+        [HttpGet]
+        public ActionResult Edit()
+        {
+            var userId = User.Identity.GetUserId();
+            var user = UserManager.FindById(userId);
+            if (user == null)
+            {
+                return View("ForgotPasswordConfirmation");
+            }
+
+            ManageUserViewModel model = new ManageUserViewModel();
+            model.Id = user.Id;
+            model.UserName = user.UserName;
+            model.Email = user.Email;
+
+            return View(model);
+        }
+
+        //edit
+        [HttpPost]
+        public ActionResult Edit([Bind(Include = "Id, UserName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var db = new ApplicationDbContext();
+                var user = db.Users.First(u => u.Id == userModel.Id);
+
+                user.UserName = userModel.UserName;
+                user.Email = userModel.Email;
+
+                PasswordHasher ph = new PasswordHasher();
+                user.PasswordHash = ph.HashPassword(userModel.Password);
+
+                db.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            return View(userModel);
+        }
+
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()

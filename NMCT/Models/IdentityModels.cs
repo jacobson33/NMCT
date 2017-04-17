@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.ComponentModel.DataAnnotations;
 
 namespace NMCT.Models
 {
@@ -16,6 +17,8 @@ namespace NMCT.Models
             // Add custom user claims here
             return userIdentity;
         }
+
+        public int AccountType { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
@@ -25,9 +28,14 @@ namespace NMCT.Models
         {
         }
 
+        public DbSet<Trail> Trail { get; set; }
+        public DbSet<Review> Review { get; set; }
+
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<NMCT.Models.ManageUserViewModel> ManageUserViewModels { get; set; }
     }
 }
