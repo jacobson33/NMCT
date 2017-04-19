@@ -6,7 +6,7 @@
 
 <h2>List of Reviews for @ViewBag.TrailName</h2>
 
-@Html.ActionLink("Add A Review", "UserCreate", "Reviews", new { trailId = ViewBag.TrailID}, null) <br />
+@Html.ActionLink("Add A Review", "UserCreate", "Reviews", new { trailId = ViewBag.TrailID }, null) <br />
 
 <table class="table">
     @foreach (NMCT.Models.Review review in Model)
@@ -22,5 +22,5 @@
     }
 </table>
 
-@Html.ActionLink("Return to previous page", "Index", "Trails");
+@Html.ActionLink("Return to Trails", "Index", "Trails")
 

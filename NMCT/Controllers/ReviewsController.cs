@@ -63,6 +63,11 @@ namespace NMCT.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult UserCreate(Review review)
         {
+            var user = User.Identity;
+
+            review.UserName = user.Name;
+            review.DateCreated = DateTime.Now;
+            
             if (ModelState.IsValid)
             {
                 db.Review.Add(review);

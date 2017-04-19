@@ -21,7 +21,8 @@
 input,
 select,
 textarea {
-    max-width: 280px;
+    max-width: 400px;
+    resize: none;
 }
 
 .jumbotron {
