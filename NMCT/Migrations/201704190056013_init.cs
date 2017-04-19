@@ -57,6 +57,15 @@ namespace NMCT.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.RolesViewModels",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Trails",
                 c => new
                     {
@@ -134,6 +143,7 @@ namespace NMCT.Migrations
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
             DropTable("dbo.Trails");
+            DropTable("dbo.RolesViewModels");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.Reviews");

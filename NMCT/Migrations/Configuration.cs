@@ -15,13 +15,7 @@ namespace NMCT.Migrations
 
         protected override void Seed(NMCT.Models.ApplicationDbContext context)
         {
-            //Add Roles
-            /*context.Roles.AddOrUpdate(r => r.Id,
-                new Microsoft.AspNet.Identity.EntityFramework.IdentityRole { Name = "Admin" },
-                new Microsoft.AspNet.Identity.EntityFramework.IdentityRole { Name = "Manager" }
-            );*/
-
-            context.Trail.AddOrUpdate(t => t.TrailID,
+            /*context.Trail.AddOrUpdate(t => t.TrailID,
                 new Trail
                 {
                     Name = "VASA Single Track",
@@ -70,19 +64,7 @@ namespace NMCT.Migrations
                     Longitude = -85.3385002,
                     Latitude = 44.2829509
                 }
-            );
-
-            context.Review.AddOrUpdate(r => r.ReviewID,
-                new Review
-                {
-                    TrailID = 1,
-                    Content = "Testing",
-                    DateCreated = DateTime.Parse("12/12/2012"),
-                    UserName = "Admin",
-                    Title = "Good Stuff",
-                    Rating = 5
-                }
-            );
+            );*/
         }
     }
 }

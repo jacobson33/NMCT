@@ -24,7 +24,7 @@ namespace NMCT.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("NMCTdb", throwIfV1Schema: false)
         {
         }
 
@@ -36,10 +36,8 @@ namespace NMCT.Models
             return new ApplicationDbContext();
         }
 
-        public System.Data.Entity.DbSet<NMCT.Models.ManageUserViewModel> ManageUserViewModels { get; set; }
-
+        //public System.Data.Entity.DbSet<NMCT.Models.ManageUserViewModel> ManageUserViewModels { get; set; }
         //public System.Data.Entity.DbSet<NMCT.Models.ApplicationUser> ApplicationUsers { get; set; }
-
-        public System.Data.Entity.DbSet<NMCT.Models.RolesViewModel> RolesViewModels { get; set; }
+        //public System.Data.Entity.DbSet<NMCT.Models.RolesViewModel> RolesViewModels { get; set; }
     }
 }

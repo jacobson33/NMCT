@@ -177,13 +177,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704171549218_init.cs" />
-    <Compile Include="Migrations\201704171549218_init.Designer.cs">
-      <DependentUpon>201704171549218_init.cs</DependentUpon>
+    <Compile Include="Migrations\201704190056013_init.cs" />
+    <Compile Include="Migrations\201704190056013_init.Designer.cs">
+      <DependentUpon>201704190056013_init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201704171615153_update1.cs" />
-    <Compile Include="Migrations\201704171615153_update1.Designer.cs">
-      <DependentUpon>201704171615153_update1.cs</DependentUpon>
+    <Compile Include="Migrations\201704190103583_update1.cs" />
+    <Compile Include="Migrations\201704190103583_update1.Designer.cs">
+      <DependentUpon>201704190103583_update1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -278,15 +278,14 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
-    <None Include="Project_Readme.html" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201704171549218_init.resx">
-      <DependentUpon>201704171549218_init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704190056013_init.resx">
+      <DependentUpon>201704190056013_init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704171615153_update1.resx">
-      <DependentUpon>201704171615153_update1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704190103583_update1.resx">
+      <DependentUpon>201704190103583_update1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
