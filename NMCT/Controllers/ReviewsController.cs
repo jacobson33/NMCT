@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using NMCT.Models;
+using NMCT.CustomAttribute;
 
 namespace NMCT.Controllers
 {
@@ -15,12 +16,15 @@ namespace NMCT.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Reviews
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Index()
         {
             return View(db.Review.ToList());
         }
 
         // GET: Reviews/Details/5
+        [HttpGet]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -49,7 +53,28 @@ namespace NMCT.Controllers
             return View(trailReviews);
         }
 
+        [HttpGet]
+        public ActionResult UserCreate()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult UserCreate(Review review)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Review.Add(review);
+                db.SaveChanges();
+                return RedirectToAction("ListOfReviewsByTrail", new { id = review.TrailID });
+            }
+            return View(review);
+        }
+
         // GET: Reviews/Create
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Create()
         {
             return View();
@@ -60,6 +85,7 @@ namespace NMCT.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Create([Bind(Include = "ReviewID,Title,Content,Rating,TrailID,UserName,DateCreated")] Review review)
         {
             if (ModelState.IsValid)
@@ -73,6 +99,8 @@ namespace NMCT.Controllers
         }
 
         // GET: Reviews/Edit/5
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -92,6 +120,7 @@ namespace NMCT.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Edit([Bind(Include = "ReviewID,Title,Content,Rating,TrailID,UserName,DateCreated")] Review review)
         {
             if (ModelState.IsValid)
@@ -104,6 +133,8 @@ namespace NMCT.Controllers
         }
 
         // GET: Reviews/Delete/5
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -121,6 +152,7 @@ namespace NMCT.Controllers
         // POST: Reviews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult DeleteConfirmed(int id)
         {
             Review review = db.Review.Find(id);

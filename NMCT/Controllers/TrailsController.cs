@@ -38,7 +38,7 @@ namespace NMCT.Controllers
 
         // GET: Trails/Create
         [HttpGet]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin,Manager")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Create()
         {
             return View();
@@ -64,7 +64,7 @@ namespace NMCT.Controllers
 
         // GET: Trails/Edit/5
         [HttpGet]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin,Manager")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -84,7 +84,7 @@ namespace NMCT.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin,Manager")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Edit([Bind(Include = "TrailID,Name,County,Longitude,Latitude,Description,URL")] Trail trail)
         {
             if (ModelState.IsValid)
@@ -98,7 +98,7 @@ namespace NMCT.Controllers
 
         // GET: Trails/Delete/5
         [HttpGet]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin,Manager")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -116,7 +116,7 @@ namespace NMCT.Controllers
         // POST: Trails/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin,Manager")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager")]
         public ActionResult DeleteConfirmed(int id)
         {
             Trail trail = db.Trail.Find(id);

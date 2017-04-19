@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using NMCT.Models;
 using NMCT.CustomAttribute;
+using System.Net;
 
 namespace NMCT.Controllers
 {
@@ -181,17 +182,9 @@ namespace NMCT.Controllers
             return View(model);
         }
 
+         #region User Management
         [HttpGet]
-        public ActionResult RolesManagement()
-        {
-            var db = new ApplicationDbContext();
-            var roles = db.Roles.ToList();
-            return View(roles);
-        }
-
-        #region User Management
-        [HttpGet]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
         public ActionResult UserManagement()
         {
             var db = new ApplicationDbContext();
@@ -200,24 +193,85 @@ namespace NMCT.Controllers
             return View(users);
         }
 
-        //edit
+        //details
         [HttpGet]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
-        public ActionResult EditUser(string id)
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult UserDetails(string id = null)
         {
             var db = new ApplicationDbContext();
             var user = db.Users.Find(id);
-            var model = new ManageUserViewModel();
 
-            model.Id = user.Id;
-            model.UserName = user.UserName;
-            model.Email = user.Email;
+            if (user == null)
+                return HttpNotFound();
+            else
+            {
+                var model = new ManageUserViewModel(user);
+                return View(model);
+            }
+        }
 
-            return View(model);
+        //delete
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult DeleteUser(string id = null)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var db = new ApplicationDbContext();
+            var user = db.Users.Find(id);
+
+            if (user == null)
+                return HttpNotFound();
+            else
+            {
+                var model = new ManageUserViewModel(user);
+                return View(model);
+            }
+        }
+                
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult DeleteConfirmed(string id = null)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var db = new ApplicationDbContext();
+            var user = db.Users.Find(id);
+
+            if (user == null)
+                return HttpNotFound();
+
+            db.Users.Remove(user);
+            db.SaveChanges();
+
+            return RedirectToAction("UserManagement");
+        }
+        //edit
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult EditUser(string id = null)
+        {
+            if (id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var db = new ApplicationDbContext();
+            var user = db.Users.Find(id);
+
+            if (user == null)
+                return HttpNotFound();
+            else
+            {
+                var model = new ManageUserViewModel(user);
+                return View(model);
+            }            
         }
 
         [HttpPost]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
         public ActionResult EditUser([Bind(Include = "Id, UserName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
         {
             if (ModelState.IsValid)
@@ -241,15 +295,16 @@ namespace NMCT.Controllers
 
         //create
         [HttpGet]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
         public ActionResult CreateUser()
         {
-            return View();
+            var model = new ManageUserViewModel();
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeOrRedirectAttribute(Roles = "Admin")]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
         public async Task<ActionResult> CreateUser(ManageUserViewModel model)
         {
             if (ModelState.IsValid)

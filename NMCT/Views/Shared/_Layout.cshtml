@@ -23,7 +23,7 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    @if (User.IsInRole("Admin"))
+                    @if (User.IsInRole("Administrator"))
                     {
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -32,11 +32,11 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("User Management", "Index", "Account")</li>
-                                <li>@Html.ActionLink("Roles Management", "Index", "Account")</li>
+                                <li>@Html.ActionLink("Roles Management", "Index", "IdentityRole")</li>
                             </ul>
                         </li>
                     }
-                    @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
                     {
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -44,8 +44,8 @@
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Manage Trails", "Index", "Home")</li>
-                                <li>@Html.ActionLink("Manage Reviews", "Index", "Home")</li>
+                                <li>@Html.ActionLink("Manage Trails", "Index", "Trails")</li>
+                                <li>@Html.ActionLink("Manage Reviews", "Index", "Reviews")</li>
                             </ul>
                         </li>
                     }

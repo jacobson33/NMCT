@@ -6,10 +6,10 @@
 
 <h2>Trails</h2>
 
-@if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+@if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
 {
     <p>
-        @Html.ActionLink("Create New", "Create")
+        @Html.ActionLink("Create New Trail", "Create")
     </p>
 }
 <table class="table">
@@ -37,7 +37,7 @@
         <td>
             @Html.ActionLink("Reviews", "ListOfReviewsByTrail", "Reviews", new { id = item.TrailID }, null)
         </td>
-        @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
         {
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.TrailID }) |
