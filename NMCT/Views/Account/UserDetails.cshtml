@@ -4,7 +4,7 @@
     ViewBag.Title = "User Details";
 }
 
-<h2>User Details</h2>
+<h2>User Management | Details</h2>
 
 <div>
     <h4>Information for @Model.UserName</h4>
@@ -30,6 +30,7 @@
 </div>
 <p>
     @Html.ActionLink("Edit", "EditUser", new { id = Model.Id }) |
-    @Html.ActionLink("Delete", "DeleteUser", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "UserManagement")
+    @Html.ActionLink("Delete", "DeleteUser", new { id = Model.Id }) | 
+    @Html.ActionLink("Roles", "ViewUserRoles", new { userId = Model.Id }) | 
+    @Html.ActionLink("Back to Users", "UserManagement")
 </p>

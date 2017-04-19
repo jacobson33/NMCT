@@ -11,6 +11,8 @@ using Microsoft.Owin.Security;
 using NMCT.Models;
 using NMCT.CustomAttribute;
 using System.Net;
+using System.Collections.Generic;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace NMCT.Controllers
 {
@@ -20,6 +22,7 @@ namespace NMCT.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        #region Stuff
         public AccountController()
         {
         }
@@ -181,8 +184,170 @@ namespace NMCT.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        #endregion
 
-         #region User Management
+        #region User Roles
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult ViewUserRoles(string userId = null)
+        {
+            if (userId != null)
+            {
+                List<string> userRoles;
+                string userName;
+
+                using (var context = new ApplicationDbContext())
+                {
+                    var roleStore = new RoleStore<IdentityRole>(context);
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                    var userStore = new UserStore<ApplicationUser>(context);
+                    var userManager = new UserManager<ApplicationUser>(userStore);
+
+                    var user = userManager.FindById(userId);
+                    if (user == null)
+                        throw new Exception("User not found");
+
+                    var userRoleIds = (from r in user.Roles select r.RoleId);
+                    userRoles = (from id in userRoleIds let r = roleManager.FindById(id) select r.Name).ToList();
+                    userName = user.UserName;
+                }
+
+                ViewBag.UserName = userName;
+                ViewBag.UserId = userId;
+                ViewBag.RolesForUser = userRoles;
+            }
+            return View();
+        }
+
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult DeleteRoleForUser(string userId = null, string roleName = null)
+        {
+            if (userId != null && roleName != null)
+            {
+                List<string> userRoles;
+                string userName;
+
+                using (var context = new ApplicationDbContext())
+                {
+                    var roleStore = new RoleStore<IdentityRole>(context);
+                    var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                    var userStore = new UserStore<ApplicationUser>(context);
+                    var userManager = new UserManager<ApplicationUser>(userStore);
+
+                    var user = userManager.FindById(userId);
+                    if (user == null)
+                        throw new Exception("User not found");
+
+                    if (userManager.IsInRole(user.Id, roleName)){
+                        userManager.RemoveFromRole(user.Id, roleName);
+                        context.SaveChanges();
+                    }
+
+                    var userRoleIds = (from r in user.Roles select r.RoleId);
+                    userRoles = (from id in userRoleIds let r = roleManager.FindById(id) select r.Name).ToList();
+                    userName = user.UserName;
+                }
+
+                ViewBag.UserId = userId;
+                ViewBag.RolesForUser = userRoles;
+                ViewBag.UserName = userName;
+            }
+
+            return View("ViewUserRoles");
+        }
+        
+        [HttpGet]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult AddRoleToUser(string userId = null)
+        {
+            List<string> roles;
+            string userName;
+
+            using (var context = new ApplicationDbContext())
+            {
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                var user = userManager.FindById(userId);
+                if (user == null)
+                    throw new Exception("User not found");
+
+                roles = (from r in roleManager.Roles select r.Name).ToList();
+
+                userName = user.UserName;
+            }
+
+            ViewBag.Roles = new SelectList(roles);
+            ViewBag.UserId = userId;
+            ViewBag.UserName = userName;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
+        public ActionResult AddRoleToUser(string userId = null, string roleName = null)
+        {
+            List<string> roles;
+            string userName;
+
+            using (var context = new ApplicationDbContext())
+            {
+                var roleStore = new RoleStore<IdentityRole>(context);
+                var roleManager = new RoleManager<IdentityRole>(roleStore);
+
+                var userStore = new UserStore<ApplicationUser>(context);
+                var userManager = new UserManager<ApplicationUser>(userStore);
+
+                var user = userManager.FindById(userId);
+                if (user == null)
+                    throw new Exception("User not found");
+
+                userName = user.UserName;
+
+                var role = roleManager.FindByName(roleName);
+                if (role == null)
+                    throw new Exception("Role not found");
+                
+                if (userManager.IsInRole(user.Id, role.Name))
+                {
+                    ViewBag.ErrorMessage = "This user already has the role specified...";
+
+                    roles = (from r in roleManager.Roles select r.Name).ToList();
+                    ViewBag.Roles = new SelectList(roles);
+
+                    ViewBag.UserId = userId;
+                    ViewBag.UserName = userName;
+
+                    return View();
+                }
+                else
+                {
+                    userManager.AddToRole(user.Id, role.Name);
+                    context.SaveChanges();
+
+                    List<string> userRoles;
+                    var userRoleIds = (from r in user.Roles select r.RoleId);
+                    userRoles = (from id in userRoleIds let r = roleManager.FindById(id) select r.Name).ToList();
+
+                    ViewBag.UserId = userId;
+                    ViewBag.UserName = userName;
+                    ViewBag.RolesForUser = userRoles;
+
+                    return View("ViewUserRoles");
+                }
+            }
+        }
+        #endregion
+
+        #region User Management
         [HttpGet]
         [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
         public ActionResult UserManagement()
@@ -230,10 +395,10 @@ namespace NMCT.Controllers
             }
         }
                 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("DeleteUser")]
         [ValidateAntiForgeryToken]
         [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
-        public ActionResult DeleteConfirmed(string id = null)
+        public ActionResult DeleteConfirmed(string id)
         {
             if (id == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

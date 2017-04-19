@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "Add Role";
+}
+
+<style>
+    select {color:black;}
+</style>
+
+<h2>User Management | Add Role</h2>
+<h3>User: @ViewBag.UserName</h3>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="alert alert-warning">@ViewBag.ErrorMessage</div>
+}
+
+@using (Html.BeginForm("AddRoleToUser", "Account"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <p>Role Name: @Html.DropDownList("RoleName", ViewBag.Roles as SelectList)</p>
+
+    @Html.Hidden("userId", ViewBag.UserId as string)
+
+    <br />
+    <input type="submit" value="Save" />
+}
+
+<p>
+    @Html.ActionLink("Return to Users", "UserManagement")
+</p>
+
