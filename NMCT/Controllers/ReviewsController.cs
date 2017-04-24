@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using NMCT.Models;
 using NMCT.CustomAttribute;
+using NMCT.Models.ViewModels;
 
 namespace NMCT.Controllers
 {
@@ -52,6 +53,8 @@ namespace NMCT.Controllers
 
             return View(trailReviews);
         }
+
+        
 
         [HttpGet]
         public ActionResult UserCreate()

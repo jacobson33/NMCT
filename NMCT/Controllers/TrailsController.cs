@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using NMCT.Models;
 using NMCT.CustomAttribute;
+using NMCT.Models.ViewModels;
 
 namespace NMCT.Controllers
 {
@@ -33,7 +34,29 @@ namespace NMCT.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.TrailID = trail.TrailID;
             return View(trail);
+        }
+
+        public ActionResult GetTrailReviewStats(int id = 1)
+        {
+            TrailReviewStatsViewModel stats = new TrailReviewStatsViewModel(id);
+
+            var reviews = db.Review.Where(t => t.TrailID == id).ToList();
+
+            stats.Rating1 = reviews.Where(t => t.Rating == 1).Count();
+            stats.Rating2 = reviews.Where(t => t.Rating == 2).Count();
+            stats.Rating3 = reviews.Where(t => t.Rating == 3).Count();
+            stats.Rating4 = reviews.Where(t => t.Rating == 4).Count();
+            stats.Rating5 = reviews.Where(t => t.Rating == 5).Count();
+
+            stats.Rating = ((stats.Rating1) +
+                (stats.Rating2 * 2) +
+                (stats.Rating3 * 3) +
+                (stats.Rating4 * 4) +
+                (stats.Rating5 * 5)) / (reviews.Count() == 0 ? 1 : reviews.Count());
+
+            return PartialView("ReviewStats", stats);
         }
 
         // GET: Trails/Create
