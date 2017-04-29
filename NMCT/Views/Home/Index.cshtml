@@ -21,9 +21,14 @@
         <p>Don't see a trail? Fill out our trail suggestion form with as much information as possible and our team will add the trail to our listings once the information is verified.</p>
         <p><a class="btn btn-default" href="#">Learn more &raquo;</a></p>
     </div>
-    <!--<div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="#">Learn more &raquo;</a></p>
-    </div>-->
+    <div class="col-md-4">
+        <h2>Top Rated Trails</h2>
+        <p>These are the top trails rated by our community!</p>
+        <div class="list-group">
+            @foreach (NMCT.Controllers.HomeController.TopFiveResults trail in ViewBag.TopFive)
+            {
+                <a href="../Trails/Details/@trail.TrailID" class="list-group-item">@trail.Name<span class="badge">@trail.Rating<i class='fa fa-star fa-fw'></i></span></a>
+            }
+        </div>
+    </div>
 </div>

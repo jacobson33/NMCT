@@ -98,20 +98,30 @@
     </div>
 
     <div class="col-md-5"  style="overflow-y:auto;max-height:320px;" id="reviewList">
-        @{Html.RenderAction("ListOfReviewsByTrail", new { id = ViewBag.TrailID, rating = 0 });}
+        @if (@stats.Rating > 0)
+        {
+            {Html.RenderAction("ListOfReviewsByTrail", new { id = ViewBag.TrailID, rating = 0 });}
+        }
+        else
+        {
+            <p class="text-info"><strong>No reviews yet. Be the first to review @Model.Name!</strong></p>
+        }
+
     </div>
 
     <div class="col-md-4" id="reviewInfo">
-        <h4 id="selectedReviewTitle"></h4>
-        <hr />
-        <p id="selectedReviewContent"></p>
-        <p>
-            <span id="selectedReviewUser"></span>
-            <br />
-            <span id="selectedReviewDate"></span>
-        </p>
+        @if (@stats.Rating > 0)
+        {
+            <h4 id="selectedReviewTitle"></h4>
+            <hr />
+            <p id="selectedReviewContent"></p>
+            <p>
+                <span id="selectedReviewUser"></span>
+                <br />
+                <span id="selectedReviewDate"></span>
+            </p>
+        }
     </div>
-
 </div>
 
 <div class="clearfix"></div>
@@ -191,6 +201,7 @@
 
 <script type="text/javascript">
     $(document).on("click", ".reviewFilter", function(){
+        if (@stats.Rating == 0) return false;
         $(".reviewFilter").removeClass("active");
         $(this).addClass("active");
         

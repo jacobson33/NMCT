@@ -20,9 +20,6 @@
         <th>
             @Html.DisplayNameFor(model => model.County)
         </th>
-        <th>
-            Rating
-        </th>
         <th></th>
     </tr>
 
@@ -33,9 +30,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.County)
-        </td>
-        <td>
-            @Html.ActionLink("Reviews", "ListOfReviewsByTrail", "Reviews", new { id = item.TrailID }, null)
         </td>
         @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
         {

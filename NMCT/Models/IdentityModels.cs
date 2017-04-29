@@ -30,6 +30,8 @@ namespace NMCT.Models
 
         public DbSet<Trail> Trail { get; set; }
         public DbSet<Review> Review { get; set; }
+        public DbSet<Event> Event { get; set; }
+        public DbSet<EventPictures> EventPictures { get; set; }
 
         public static ApplicationDbContext Create()
         {

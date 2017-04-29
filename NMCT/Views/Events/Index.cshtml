@@ -1,0 +1,59 @@
+﻿@model IEnumerable<NMCT.Models.Event>
+
+@{
+    ViewBag.Title = "Events";
+}
+
+<h2>Event Listing</h2>
+
+@if (User.IsInRole("Moderator") || User.IsInRole("Manager") || User.IsInRole("Admin"))
+{ 
+    <p>
+        @Html.ActionLink("Add New Event", "Create")
+    </p>
+}
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.EventName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EventDate)
+        </th>        
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.EventName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EventDate)
+        </td>        
+        @if (User.IsInRole("Moderator") && !(User.IsInRole("Admin") || User.IsInRole("Manager")))
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.EventID })
+            </td>
+        }
+        else if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        {
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.EventID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.EventID })
+            </td>
+        }
+        else if (User.IsInRole("User") || !User.Identity.IsAuthenticated)
+        {
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.EventID })
+            </td>
+        }
+    </tr>
+}
+
+</table>

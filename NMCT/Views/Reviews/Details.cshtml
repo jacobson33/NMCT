@@ -7,7 +7,7 @@
 <h2>Trail Review</h2>
 
 <div>
-    <h4>Review</h4>
+    <h4>Review Information</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -66,6 +66,13 @@
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.ReviewID }) |
         @Html.ActionLink("Delete", "Delete", new { id = Model.ReviewID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+else if (User.IsInRole("Moderator"))
+{
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.ReviewID }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
 }

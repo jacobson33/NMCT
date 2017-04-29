@@ -1,0 +1,87 @@
+﻿@model NMCT.Models.Event
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>@Model.EventName</h2>
+
+<div>
+    <h3>Event Information</h3>
+    <hr />
+    <div>
+        <h4>@Html.DisplayFor(model => model.EventDate)</h4>
+    </div>
+
+    <aside class="pull-right">
+        @if (Model.EventPictures.Count > 0)
+        {
+            <img class="img-rounded img-responsive" src="@Model.EventPictures[0].PictureURL" />
+        }
+    </aside>
+
+    <div>
+        <h4>@Html.DisplayNameFor(model => model.EventDescription)</h4>
+        <p>
+            @Html.DisplayFor(model => model.EventDescription)
+        </p>
+        <hr />
+    </div>
+
+    @if (Model.TrailID > 0)
+    {
+        <div>
+            <h4>Trail Information</h4>
+            @Html.ActionLink("View Trail Page", "Details", "Trails", new { id = Model.TrailID })
+        </div>
+        <hr />
+    }
+
+    <div class="col-md-5">
+        <h4>Contact Information</h4>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.ContactPhone)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ContactPhone)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ContactEmail)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ContactEmail)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ContactUrl)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ContactUrl)
+            </dd>
+        </dl>
+    </div>
+</div>
+
+
+<div class="clearfix col-md-12">
+    @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+    {
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    }
+    else
+    {
+        <p>
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    }
+</div>
+
+<div class="clearfix"></div>

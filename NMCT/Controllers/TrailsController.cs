@@ -160,6 +160,7 @@ namespace NMCT.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ActionName("UserCreateReview")]
+        [AuthorizeOrRedirectAttribute]
         public async Task<JsonResult> UserCreateReview(FormCollection collection)
         {
             var review = new Review();
