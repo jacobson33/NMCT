@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using NMCT.Models;
 using NMCT.CustomAttribute;
 using NMCT.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace NMCT.Controllers
 {
@@ -39,23 +40,7 @@ namespace NMCT.Controllers
             }
             return View(review);
         }
-
-        public ActionResult ListOfReviewsByTrail(int id)
-        {
-            var trailReviews = db.Review.Where(a => a.TrailID == id).ToList();
-
-            trailReviews.OrderByDescending(a => a.DateCreated);
-
-            var trail = db.Trail.Find(id);
-
-            ViewBag.TrailName = trail.Name;
-            ViewBag.TrailID = trail.TrailID;
-
-            return View(trailReviews);
-        }
-
         
-
         [HttpGet]
         public ActionResult UserCreate()
         {

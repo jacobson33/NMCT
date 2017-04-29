@@ -23,9 +23,9 @@ namespace NMCT.Models.ViewModels
 
         }
 
-        public TrailReviewStatsViewModel(int id)
+        public TrailReviewStatsViewModel(int? id)
         {
-            this.TrailID = id;
+            this.TrailID = id ?? default(int);
         }
     }
 }

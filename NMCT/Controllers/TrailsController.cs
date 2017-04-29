@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using NMCT.Models;
 using NMCT.CustomAttribute;
 using NMCT.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace NMCT.Controllers
 {
@@ -34,14 +35,9 @@ namespace NMCT.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TrailID = trail.TrailID;
-            return View(trail);
-        }
 
-        public ActionResult GetTrailReviewStats(int id = 1)
-        {
+            //get total stats for trail reviews
             TrailReviewStatsViewModel stats = new TrailReviewStatsViewModel(id);
-
             var reviews = db.Review.Where(t => t.TrailID == id).ToList();
 
             stats.Rating1 = reviews.Where(t => t.Rating == 1).Count();
@@ -50,13 +46,26 @@ namespace NMCT.Controllers
             stats.Rating4 = reviews.Where(t => t.Rating == 4).Count();
             stats.Rating5 = reviews.Where(t => t.Rating == 5).Count();
 
-            stats.Rating = ((stats.Rating1) +
-                (stats.Rating2 * 2) +
-                (stats.Rating3 * 3) +
-                (stats.Rating4 * 4) +
-                (stats.Rating5 * 5)) / (reviews.Count() == 0 ? 1 : reviews.Count());
+            stats.Rating = ((stats.Rating1) + (stats.Rating2 * 2) + (stats.Rating3 * 3) + (stats.Rating4 * 4) + (stats.Rating5 * 5)) / (reviews.Count() == 0 ? 1 : reviews.Count());
 
-            return PartialView("ReviewStats", stats);
+            ViewBag.Stats = stats;
+            ViewBag.TrailID = trail.TrailID;
+
+            return View(trail);
+        }
+
+        public ActionResult ListOfReviewsByTrail(int id, int? rating)
+        {
+            var trailReviews = new List<Review>();
+
+            if (rating != null && rating >= 1 && rating <= 5)
+                trailReviews = db.Review.Where(a => a.TrailID == id).Where(a => a.Rating == rating).ToList();
+            else
+                trailReviews = db.Review.Where(a => a.TrailID == id).ToList();
+
+            trailReviews.OrderByDescending(a => a.DateCreated);
+
+            return PartialView(trailReviews);
         }
 
         // GET: Trails/Create
@@ -146,6 +155,49 @@ namespace NMCT.Controllers
             db.Trail.Remove(trail);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("UserCreateReview")]
+        public async Task<JsonResult> UserCreateReview(FormCollection collection)
+        {
+            var review = new Review();
+            var user = User.Identity;
+            string mess = "";
+
+            int rating;
+            int trailid;
+            bool valid = true;
+
+            //validate information
+            if (!int.TryParse(collection["Rating"], out rating))
+            {
+                valid = false;
+            }
+            if (!int.TryParse(collection["TrailID"], out trailid))
+            {
+                valid = false;
+            }
+
+            if (!valid)
+                return Json(new { status = "Error", message = "Review is invalid."});
+
+            review.UserName = user.Name;
+            review.DateCreated = DateTime.Now;
+            review.Rating = rating;
+            review.Title = collection["Title"];
+            review.TrailID = trailid;
+            review.Content = collection["Content"];
+
+            if (ModelState.IsValid)
+            {
+                db.Review.Add(review);
+                db.SaveChanges();
+                return Json(new { status = "Success", message = "Success" });
+            }
+
+            return Json(new { status = "Error", message = "ModelState Not Valid" });
         }
 
         protected override void Dispose(bool disposing)

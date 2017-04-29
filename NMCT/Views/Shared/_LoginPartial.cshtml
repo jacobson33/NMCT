@@ -19,20 +19,27 @@ else
         <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                Login
-                @*<img class="img-responsive" src="/images/h-perfil.png" alt="imagen"> perfil <span class="caret"></span>*@
+                Login<span class="caret"></span>
             </a>
-            <div class="dropdown-menu" style="padding: 15px; padding-bottom: 0px;">
+            <div class="dropdown-menu login-dropdown">
                 @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                 {
                     @Html.AntiForgeryToken()
 
-                    <input style="margin-bottom: 15px;" type="text" placeholder="User" id="UserName" name="UserName">
-                    <input style="margin-bottom: 15px;" type="password" placeholder="Password" id="Password" name="Password">
-                    <input class="btn btn-primary btn-block btn-sm" type="submit" id="sign-in" value="Login">
-                    <div class="checkbox">
-                        <label for="RememberMe">Remember Me ?</label>
-                        <input type="checkbox" id="RememberMe" name="RememberMe" />
+                    <div class="form-group-sm">
+                        <input class="form-control form-control-sm" type="text" placeholder="User" id="UserName" name="UserName">
+                    </div>
+
+                    <div class="form-group-sm">
+                        <input class="form-control" type="password" placeholder="Password" id="Password" name="Password">
+                    </div>                    
+
+                    <div class="form-group-sm">
+                        <label class="checkbox-inline" for="RememberMe">@Html.CheckBox("RememberMe") Remember Me?</label>
+                    </div>
+
+                    <div class="form-group-sm">
+                        <input class="btn btn-primary btn-block btn-sm form-control" type="submit" id="sign-in" value="Login">
                     </div>
                 }
             </div>

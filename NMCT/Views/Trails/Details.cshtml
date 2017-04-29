@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Trail Details";
+    NMCT.Models.ViewModels.TrailReviewStatsViewModel stats = ViewBag.stats;
 }
 
 <h2>Trail Details</h2>
@@ -55,7 +56,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.URL)
+            <a href="@Model.URL" target="_blank">@Html.DisplayFor(model => model.URL)</a>
         </dd>
 
     </dl>
@@ -80,22 +81,226 @@
 
 <div class="col-md-12">
     <hr />
-    <div class="col-md-6" id="reviewStats">
-        <h3>Reviews</h3>        
-        <div>
-            @Html.Action("GetTrailReviewStats")
-        </div>
+    <div>
+        <a href="#" type="button" class="createReview_open ">Add a Review</a>
     </div>
 
-    <div class="col-md-6" id="reviewInfo">
-        <h4>Review Title</h4>
+    <div class="col-md-3" id="reviewStats">
+        <h3>Reviews</h3>
+        <div class="list-group">
+            <a class="list-group-item reviewFilter active text-right" data-value="0">Average Rating: @stats.Rating<i class='fa fa-star fa-fw'></i></a>
+            <a class="list-group-item reviewFilter" data-value="5"><span class="badge"> @stats.Rating5 </span><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i></a>
+            <a class="list-group-item reviewFilter" data-value="4"><span class="badge"> @stats.Rating4 </span><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i></a>
+            <a class="list-group-item reviewFilter" data-value="3"><span class="badge"> @stats.Rating3 </span><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i></a>
+            <a class="list-group-item reviewFilter" data-value="2"><span class="badge"> @stats.Rating2 </span><i class='fa fa-star fa-fw'></i><i class='fa fa-star fa-fw'></i></a>
+            <a class="list-group-item reviewFilter" data-value="1"><span class="badge"> @stats.Rating1 </span><i class='fa fa-star fa-fw'></i></a>
+        </div>        
+    </div>
+
+    <div class="col-md-5"  style="overflow-y:auto;max-height:320px;" id="reviewList">
+        @{Html.RenderAction("ListOfReviewsByTrail", new { id = ViewBag.TrailID, rating = 0 });}
+    </div>
+
+    <div class="col-md-4" id="reviewInfo">
+        <h4 id="selectedReviewTitle"></h4>
         <hr />
-        <p>Review information (selected)</p>
+        <p id="selectedReviewContent"></p>
+        <p>
+            <span id="selectedReviewUser"></span>
+            <br />
+            <span id="selectedReviewDate"></span>
+        </p>
     </div>
 
 </div>
 
 <div class="clearfix"></div>
+
+<div id="createReview" class="popover">
+    <div class="popover-title">
+        <h4>Review @Model.Name</h4>
+    </div>
+    @using (Html.BeginForm("", "", FormMethod.Post, htmlAttributes: new { @class="form form-horizontal reviewForm"})){
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary()
+
+        @Html.Hidden("TrailID")
+        @Html.Hidden("Rating")
+        
+        if (User.Identity.IsAuthenticated)
+        {
+        <div class='rating-stars text-center popover-content'>
+            <ul id='stars'>
+                <li class='star' title='Poor' data-value='1'><i class='fa fa-star fa-fw'></i></li>
+                <li class='star' title='Fair' data-value='2'><i class='fa fa-star fa-fw'></i></li>
+                <li class='star' title='Good' data-value='3'><i class='fa fa-star fa-fw'></i></li>
+                <li class='star' title='Excellent' data-value='4'><i class='fa fa-star fa-fw'></i></li>
+                <li class='star' title='WOW!!!' data-value='5'><i class='fa fa-star fa-fw'></i></li>
+            </ul>
+            <span class="validation text-danger hidden">CHOOSE A RATING!</span>
+        </div>
+
+        <div class="form-group controls">
+            <label class="control-label col-md-2" for="Title">Title:</label>
+            <div class="col-md-12">                
+                <input name="Title" class="form-control" />
+                <span class="validation text-danger hidden">You must enter a title.</span>
+            </div>
+        </div>
+
+        <div class="form-group controls">
+            <label class="control-label col-md-2" for="Content">Review:</label>
+            <div class="col-md-12">
+                <textarea name="Content" rows="6" class="form-control"></textarea>
+                <span class="validation text-danger hidden">You must enter text.</span>
+            </div>
+        </div>
+
+        <div class="form-group controls">
+            <div class="col-md-12">
+                <div class="alert alert-success successMessage hidden">
+                    <p class="text-center">Review submitted! Thank you!</p>
+                </div>
+                <div class="alert alert-warning errorMessage hidden">
+                    <p class="text-center errorMessageText"></p>
+                </div>                
+            </div>
+        </div>
+
+        <br />
+
+        <div class="form-group controls">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-sm btn-danger col-md-3 col-md-offset-1 createReview_close">Close</button>
+                <button type="submit" class="btn btn-sm btn-success col-md-3 col-md-offset-4">Submit</button>
+            </div>
+        </div>
+        }
+        else
+        {
+            <div class="text-warning alert">
+                <p><i class="glyphicon glyphicon-warning-sign"></i>You must login before submitting a review!</p>
+            </div>
+            <div class="col-md-12">
+                <button type="button" class="btn btn-sm btn-danger center-block createReview_close">Close</button>
+            </div>            
+        }
+    }
+    
+</div>
+
+<script type="text/javascript">
+    $(document).on("click", ".reviewFilter", function(){
+        $(".reviewFilter").removeClass("active");
+        $(this).addClass("active");
+        
+        var rating = $(this).data("value");
+        
+        $.ajax({
+            url: '@Url.Action("ListOfReviewsByTrail", "Trails")',
+            type: "get",
+            data: {
+                id: @ViewBag.TrailID,
+                rating: rating
+            },
+            success: function(result) {
+                $("#reviewList").html(result);
+            }
+        });
+    });
+
+    $(document).on("click", ".reviewItem", function(){
+        $(".reviewItem").removeClass("active");
+        $(this).addClass("active");
+
+        var title = $(this).data('title');
+        var content = $(this).data('content');
+        var user = $(this).data('user');
+        var date = $(this).data('date');
+        var rating = $(this).data('rating');
+
+        $("#selectedReviewTitle").text(title)
+        $("#selectedReviewContent").text(content);        
+        $("#selectedReviewUser").text("By: " + user);
+        $("#selectedReviewDate").text("Submitted: " + date);        
+    });
+
+
+    $(document).on('click', 'button[type="submit"]', function(e){
+        validateForm();
+        return false;
+    });
+    $(document).on('click', '.star', function(e){
+        $(".rating-stars").children(".validation").addClass("hidden");
+        return false;
+    });
+    $(document).on('change', 'input[name="Title"], textarea[name="Content"]', function(e){
+        $(e.target).siblings(".validation:not(.hidden)").addClass("hidden");
+        return false;
+    });
+
+    function validateForm(){
+        var rating = $('.star.selected').length;
+        var title = $("input[name='Title']").val();
+        var content = $("textarea[name='Content']").val();
+
+        var valid = true;
+
+        //validation
+        if (rating == 0){
+            $(".rating-stars").children(".validation").removeClass("hidden");
+            valid = false;
+        } 
+        if (title.trim() == "") {
+            $("input[name='Title']").siblings(".validation").removeClass("hidden");
+            valid = false;
+        } 
+        if (content.trim() == ""){
+            $("textarea[name='Content']").siblings(".validation").removeClass("hidden");
+            valid = false;
+        } 
+        
+        //form submissions
+        if (valid) {
+            $("form.reviewForm input[name='Rating']").val(rating);
+            $("form.reviewForm input[name='TrailID']").val(@ViewBag.TrailID);
+
+            var formData = $("form.reviewForm").serialize();
+            $.ajax({
+                url:'@Url.Action("UserCreateReview", "Trails")',
+                type:'POST',
+                enctype:'multipart/form-data',
+                dataType:'json',
+                data: formData,
+                success:function(response){
+                    $(".successMessage").toggleClass("hidden");
+                    setTimeout(function(){
+                        $(".successMessage").toggleClass("hidden");
+                        ResetAndClose();
+                    }, 2000);                    
+                },
+                error:function(response){
+                    $(".errorMessageText").text("Something went wrong, try reloading the page and try again.");
+                    $(".errorMessage").toggleClass("hidden");
+                    setTimeout(function(){
+                        $(".errorMessage").toggleClass("hidden");
+                        ResetAndClose();
+                    }, 5000);
+                }
+            });
+        }
+    }
+
+    function ResetAndClose(){
+        //reset & close
+        $("input[name='Title']").val('');
+        $("textarea[name='Content']").val('');
+        $(".star").removeClass("selected");
+        $('#createReview').popup('hide');
+    }
+</script>
+
+
 
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?key=AIzaSyCuLNIGdQlLxGfis0U_TxXgjdaluJa8dxA&sensor=false"></script>
 <script type="text/javascript">
@@ -122,5 +327,4 @@
     window.onload = function(){
         initialize();
     }
-
 </script>

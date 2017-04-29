@@ -1,0 +1,19 @@
+﻿@model IEnumerable<NMCT.Models.Review>
+
+<div class="list-group list-group-hover">
+    <a class="list-group-item list-group-item-heading no-pointer"><span><strong>Review Title</strong></span></a>
+    @foreach (NMCT.Models.Review review in Model)
+    {
+        <a class="list-group-item reviewItem" 
+                data-title="@review.Title" 
+                data-content="@review.Content" 
+                data-date="@review.DateCreated.ToShortDateString()" 
+                data-user="@review.UserName" 
+                data-rating="@review.Rating">
+            @Html.DisplayFor(modelItem => review.Title)
+            <span class="badge">@Html.DisplayFor(modelItem => review.Rating)
+                <i class='fa fa-star fa-fw'></i>
+            </span>
+        </a>
+    }
+</div>
