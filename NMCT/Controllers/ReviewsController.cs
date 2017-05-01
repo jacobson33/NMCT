@@ -28,7 +28,11 @@ namespace NMCT.Controllers
             ViewBag.TrailID = trailid;
 
             //filtering
-            IEnumerable<Review> reviews = db.Review.Where(r => r.TrailID == trailid).ToList();
+            IEnumerable<Review> reviews = db.Review.ToList();
+
+            if (trailid > 0)
+                reviews = reviews.Where(r => r.TrailID == trailid);
+
             if (!String.IsNullOrWhiteSpace(search))
                 reviews = reviews.Where(r => r.UserName.ToUpper().Contains(search.ToUpper()));
 
@@ -118,7 +122,12 @@ namespace NMCT.Controllers
         {
             if (ModelState.IsValid)
             {
+                var excluded = new[] { "DateCreated", "TrailID", "Rating" };
                 db.Entry(review).State = EntityState.Modified;
+                foreach (var name in excluded)
+                {
+                    db.Entry(review).Property(name).IsModified = false;
+                }                
                 db.SaveChanges();
                 return RedirectToAction("Index", new { id = review.TrailID });
             }
