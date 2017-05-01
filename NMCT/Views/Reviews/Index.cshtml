@@ -8,9 +8,11 @@
 
 @using (Html.BeginForm("Index", "Reviews", FormMethod.Get, htmlAttributes: new { @class = "form form-horizontal" }))
 {
+    <input type="hidden" value="@ViewBag.SortBy" name="sortby" />
+
     <div class="form-group form-group-sm">
         @Html.Label("Trail", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-5">
+        <div class="col-md-3">
             <select class="form-control" name="trailid">
                 <option value=""></option>
                 @foreach (NMCT.Models.Trail trail in ViewBag.TrailList)
@@ -23,31 +25,38 @@
                     {
                         <option value="@trail.TrailID">@trail.Name</option>
                     }
-
                 }
             </select>
+        </div>        
+    </div>
+
+    <div class="form-group form-group-sm">
+        @Html.Label("Search by User Name", htmlAttributes: new {@class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.TextBox("search", (string)ViewBag.SearchBy, new { @class = "form-control" })
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-2">
             <button type="submit" class="btn btn-sm btn-info">Get Reviews</button>
         </div>
-        
     </div>
 }
 
 <table class="table table-hover">
     <tr>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Title).ToString(), "Index", new { trailid = ViewBag.TrailID, sort = 1 })
+            @Html.DisplayNameFor(model => model.Title)
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.Rating).ToString(), "Index", new { trailid = ViewBag.TrailID, sort = 2 })
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.Rating).ToString(), "Index", new { sortby = ViewBag.RatingSort, search = ViewBag.SearchBy, trailid = ViewBag.TrailID }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.RatingSortArrow"></span>
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.UserName).ToString(), "Index", new { trailid = ViewBag.TrailID, sort = 3 })
+            @Html.DisplayNameFor(model => model.UserName)          
         </th>
         <th>
-            @Html.ActionLink(Html.DisplayNameFor(model => model.DateCreated).ToString(), "Index", new { trailid = ViewBag.TrailID, sort = 4 })
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.DateCreated).ToString(), "Index", new { sortby = ViewBag.DateSort, search = ViewBag.SearchBy, trailid = ViewBag.TrailID }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.DateSortArrow"></span>
         </th>
         <th></th>
     </tr>

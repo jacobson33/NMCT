@@ -20,39 +20,58 @@ namespace NMCT.Controllers
         // GET: Reviews
         [HttpGet]
         [AuthorizeOrRedirectAttribute(Roles = "Administrator,Manager,Moderator")]
-        public ActionResult Index(int trailid = 0, int sort = 0)
+        public ActionResult Index(string sortby, string search, int trailid = 0)
         {
             var trails = db.Trail.ToList();
-            var model = new List<Review>();
 
             ViewBag.TrailList = trails;
             ViewBag.TrailID = trailid;
 
-            if (trailid == 0)
-                return View(model);
+            //filtering
+            IEnumerable<Review> reviews = db.Review.Where(r => r.TrailID == trailid).ToList();
+            if (!String.IsNullOrWhiteSpace(search))
+                reviews = reviews.Where(r => r.UserName.ToUpper().Contains(search.ToUpper()));
 
-            var reviews = db.Review.Where(r => r.TrailID == trailid);            
+            //sorting setup
+            ViewBag.DateSort = sortby == "Date" ? "Date_desc" : "Date";
+            ViewBag.RatingSort = sortby == "Rating" ? "Rating_desc" : "Rating";
+            ViewBag.SortBy = sortby;
 
-            switch (sort)
+            //sorting
+            switch (sortby)
             {
-                case 1:
-                    model = reviews.OrderBy(r => r.Title).ToList();
+                case "Date":
+                    reviews = reviews.OrderBy(r => r.DateCreated);
+                    ViewBag.DateSortArrow = "glyphicon-chevron-up";
+                    ViewBag.RatingSortArrow = null;
                     break;
-                case 2:
-                    model = reviews.OrderByDescending(r => r.Rating).ToList();
+
+                case "Date_desc":
+                    reviews = reviews.OrderByDescending(r => r.DateCreated);
+                    ViewBag.DateSortArrow = "glyphicon-chevron-down";
+                    ViewBag.RatingSortArrow = null;
                     break;
-                case 3:
-                    model = reviews.OrderBy(r => r.UserName).ToList();
+
+                case "Rating":
+                    reviews = reviews.OrderBy(r => r.Rating);
+                    ViewBag.RatingSortArrow = "glyphicon-chevron-up";
+                    ViewBag.DateSortArrow = null;
                     break;
-                case 4:
-                    model = reviews.OrderBy(r => r.DateCreated).ToList();
+
+                case "Rating_desc":
+                    reviews = reviews.OrderByDescending(r => r.Rating);
+                    ViewBag.RatingSortArrow = "glyphicon-chevron-down";
+                    ViewBag.DateSortArrow = null;
                     break;
+
                 default:
-                    model = reviews.OrderByDescending(r => r.DateCreated).ToList();
+                    reviews = reviews.OrderByDescending(r => r.DateCreated);
+                    ViewBag.NameSortArrow = null;
+                    ViewBag.CountySortArrow = null;
                     break;
             }
 
-            return View(model);
+            return View(reviews);
         }
 
         // GET: Reviews/Details/5

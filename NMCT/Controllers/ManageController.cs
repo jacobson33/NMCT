@@ -119,13 +119,15 @@ namespace NMCT.Controllers
 
         //edit
         [HttpPost]
-        public ActionResult Edit([Bind(Include = "Id, UserName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
+        public ActionResult Edit([Bind(Include = "Id, UserName, FirstName, LastName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
         {
             if (ModelState.IsValid)
             {
                 var db = new ApplicationDbContext();
                 var user = db.Users.First(u => u.Id == userModel.Id);
 
+                user.FirstName = userModel.FirstName;
+                user.LastName = userModel.LastName;
                 user.UserName = userModel.UserName;
                 user.Email = userModel.Email;
 

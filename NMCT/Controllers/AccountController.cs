@@ -13,6 +13,7 @@ using NMCT.CustomAttribute;
 using System.Net;
 using System.Collections.Generic;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Security;
 
 namespace NMCT.Controllers
 {
@@ -162,7 +163,7 @@ namespace NMCT.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.UserName, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName, RegisteredDate = DateTime.Now };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -350,10 +351,52 @@ namespace NMCT.Controllers
         #region User Management
         [HttpGet]
         [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
-        public ActionResult UserManagement()
+        public ActionResult UserManagement(string search, string sortby, string role)
         {
-            var db = new ApplicationDbContext();
-            var users = db.Users.ToList();
+            ApplicationDbContext db = new ApplicationDbContext();
+            IEnumerable<ApplicationUser> users = db.Users.ToList();
+            var roleList = new List<SelectListItem>();
+            List<IdentityRole> roles = db.Roles.OrderBy(r => r.Name).ToList();
+
+            roles.ForEach(r => roleList.Add(new SelectListItem() { Text = r.Name, Value = r.Name }));
+
+            ViewBag.Roles = roleList;
+
+            //filtering
+            if (!String.IsNullOrWhiteSpace(role))
+            {
+                string roleid = db.Roles.FirstOrDefault(r => r.Name == role).Id;
+                users = users.Where(u => u.Roles.Any(x => x.RoleId == roleid));
+            }
+
+            if (!String.IsNullOrWhiteSpace(search))
+                users = users.Where(u => u.UserName.ToUpper().Contains(search.ToUpper()));
+
+            //sorting setup
+            ViewBag.NameSort = sortby == "Name" ? "Name_desc" : "Name";
+            ViewBag.SortBy = sortby;
+
+            //sorting
+            switch (sortby)
+            {
+                case "Name":
+                    users = users.OrderBy(u => u.UserName);
+                    ViewBag.NameSortArrow = "glyphicon-chevron-up";
+                    ViewBag.DateSortArrow = null;
+                    break;
+
+                case "Name_desc":
+                    users = users.OrderByDescending(u => u.UserName);
+                    ViewBag.NameSortArrow = "glyphicon-chevron-down";
+                    ViewBag.DateSortArrow = null;
+                    break;
+
+                default:
+                    users = users.OrderByDescending(u => u.UserName);
+                    ViewBag.NameSortArrow = null;
+                    ViewBag.CountySortArrow = null;
+                    break;
+            }
 
             return View(users);
         }
@@ -437,13 +480,15 @@ namespace NMCT.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeOrRedirectAttribute(Roles = "Administrator")]
-        public ActionResult EditUser([Bind(Include = "Id, UserName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
+        public ActionResult EditUser([Bind(Include = "Id, UserName, FirstName, LastName, Email, Password, ConfirmPassword")] ManageUserViewModel userModel)
         {
             if (ModelState.IsValid)
             {
                 var db = new ApplicationDbContext();
                 var user = db.Users.First(u => u.Id == userModel.Id);
 
+                user.FirstName = userModel.FirstName;
+                user.LastName = userModel.LastName;
                 user.UserName = userModel.UserName;
                 user.Email = userModel.Email;
 
@@ -476,9 +521,12 @@ namespace NMCT.Controllers
             {
                 var user = new ApplicationUser
                 {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
                     UserName = model.UserName,
                     Email = model.Email,
-                    AccountType = 99
+                    AccountType = 99,
+                    RegisteredDate = DateTime.Now
                 };
 
                 var result = await UserManager.CreateAsync(user, model.Password);

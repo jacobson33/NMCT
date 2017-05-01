@@ -13,13 +13,31 @@
     </p>
 }
 
+@using (Html.BeginForm("Index", "Events", FormMethod.Get, htmlAttributes: new { @class = "form form-horizontal" }))
+{
+    <input type="hidden" value="@ViewBag.SortBy" name="sortby" />
+
+    <div class="form-group form-group-sm">
+        @Html.Label("Search by Event Name", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.TextBox("search", (string)ViewBag.SearchBy, new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-sm btn-info">Search</button>
+        </div>
+    </div>
+}
+
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.EventName)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.EventName).ToString(), "Index", new { sortby = ViewBag.NameSort, search = ViewBag.SearchBy }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.NameSortArrow"></span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.EventDate)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.EventDate).ToString(), "Index", new { sortby = ViewBag.DateSort, search = ViewBag.SearchBy }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.DateSortArrow"></span>
         </th>        
         <th></th>
     </tr>

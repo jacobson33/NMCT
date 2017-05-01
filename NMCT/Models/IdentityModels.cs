@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace NMCT.Models
 {
@@ -17,8 +18,10 @@ namespace NMCT.Models
             // Add custom user claims here
             return userIdentity;
         }
-
         public int AccountType { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime RegisteredDate { get; set; }
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

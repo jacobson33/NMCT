@@ -44,6 +44,11 @@ textarea {
     color: black;
 }
 
+a.filterText {
+    font-size: 110%;
+    color: lightblue;
+}
+
 /* Formatting for dropdown on navbar*/
 .login-dropdown {
     padding: 3px 8px 3px 10px;

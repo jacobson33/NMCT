@@ -6,13 +6,37 @@
 
 <h2>User Management</h2>
 
+@using (Html.BeginForm("UserManagement", "Account", FormMethod.Get, htmlAttributes: new { @class = "form form-horizontal" }))
+{
+    <div class="form-group form-group-sm">
+        @Html.Label("User Role", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.DropDownList("role", (IEnumerable<SelectListItem>)ViewBag.Roles, "All Roles", new { @class = "form-control" })
+        </div>
+    </div>
+
+    <input type="hidden" value="@ViewBag.SortBy" name="sortby" />
+
+    <div class="form-group form-group-sm">
+        @Html.Label("Search by User Name", htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.TextBox("search", (string)ViewBag.SearchBy, new { @class = "form-control" })
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-sm btn-info">Search</button>
+        </div>
+    </div>
+}
+
 <p>
     @Html.ActionLink("Create New User", "CreateUser")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.UserName)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.UserName).ToString(), "UserManagement", new { sortby = ViewBag.NameSort, search = ViewBag.SearchBy, role = ViewBag.RoleSort }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.NameSortArrow"></span>
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Email)

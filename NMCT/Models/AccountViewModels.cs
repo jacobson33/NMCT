@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace NMCT.Models
@@ -76,7 +77,10 @@ namespace NMCT.Models
         [StringLength(20, MinimumLength = 4, ErrorMessage = "User name must be between 4 and 20 characters in length.")]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
-
+        [Display(Name = "First Name")]
+        public string FirstName { get; set; }
+        [Display(Name = "Last Name")]
+        public string LastName { get; set; }
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

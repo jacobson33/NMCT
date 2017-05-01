@@ -34,7 +34,7 @@
             if (count == 0)
             {
                 <div class="item active">
-                    <img src="@item.EventPicture" class="center-block"/>
+                    <img src="@item.EventPicture" class="center-block" alt="Event Picture" />
                     <div class="carousel-caption">
                         <h3>@item.EventName</h3>
                         <h4>@item.EventDate.ToShortDateString()</h4>
@@ -48,7 +48,7 @@
             else
             {
                 <div class="item">
-                    <img src="@item.EventPicture" class="center-block" />
+                    <img src="@item.EventPicture" class="center-block" alt="No event picture" />
                     <div class="carousel-caption">
                         <h3>@item.EventName</h3>
                         <h4>@item.EventDate.ToShortDateString()</h4>

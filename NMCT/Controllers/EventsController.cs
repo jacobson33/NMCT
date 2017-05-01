@@ -18,9 +18,54 @@ namespace NMCT.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Events
-        public ActionResult Index()
+        public ActionResult Index(string search, string sortby)
         {
-            return View(db.Event.ToList());
+            IEnumerable<Event> events = db.Event.ToList();
+            
+            //filtering
+            if (!String.IsNullOrWhiteSpace(search))
+                events = events.Where(e => e.EventName.ToUpper().Contains(search.ToUpper()));
+
+            //sorting setup
+            ViewBag.DateSort = sortby == "Date" ? "Date_desc" : "Date";
+            ViewBag.NameSort = sortby == "Name" ? "Name_desc" : "Name";
+            ViewBag.SortBy = sortby;
+
+            //sorting
+            switch (sortby)
+            {
+                case "Date":
+                    events = events.OrderBy(e => e.EventDate);
+                    ViewBag.DateSortArrow = "glyphicon-chevron-up";
+                    ViewBag.NameSortArrow = null;
+                    break;
+
+                case "Date_desc":
+                    events = events.OrderByDescending(e => e.EventDate);
+                    ViewBag.DateSortArrow = "glyphicon-chevron-down";
+                    ViewBag.NameSortArrow = null;
+                    break;
+
+                case "Name":
+                    events = events.OrderBy(e => e.EventName);
+                    ViewBag.NameSortArrow = "glyphicon-chevron-up";
+                    ViewBag.DateSortArrow = null;
+                    break;
+
+                case "Name_desc":
+                    events = events.OrderByDescending(e => e.EventName);
+                    ViewBag.NameSortArrow = "glyphicon-chevron-down";
+                    ViewBag.DateSortArrow = null;
+                    break;
+
+                default:
+                    events = events.OrderByDescending(e => e.EventName);
+                    ViewBag.NameSortArrow = null;
+                    ViewBag.CountySortArrow = null;
+                    break;
+            }
+
+            return View(events);
         }
 
         // GET: Events/Details/5

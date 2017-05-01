@@ -6,6 +6,25 @@
 
 <h2>Trails</h2>
 
+@using (Html.BeginForm("Index", "Trails", FormMethod.Get))
+{
+    <div id="FilterSearch" class="form-horizontal">
+        <div class="form-group form-group-sm">
+            @Html.Label("Search by Name", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.TextBox("search", null, new { @class = "form-control" })
+        </div>
+        <div class="form-group form-group-sm">
+            @Html.Label("Filter by County", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.DropDownList("county", new SelectList(@ViewBag.Counties), "All Counties", new { @class = "form-control" })
+        </div>
+        <input type="hidden" name="sortby" value="@ViewBag.SortBy" />
+        <div class="form-group form-group-sm">
+            <input type="submit" value="Search" class="btn btn-sm col-md-2 col-md-offset-2" />
+            <input type="button" value="Reset Filters" onclick="location.href='@Url.Action("Index", "Trails")'" class="btn btn-sm col-md-2 col-md-offset-2" />
+        </div>
+    </div>
+}
+
 @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
 {
     <p>
@@ -15,10 +34,12 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.Name).ToString(), "Index", new { sortby = ViewBag.NameSort, search = ViewBag.SearchFilter, county = ViewBag.CountyFilter }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.NameSortArrow"></span>
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.County)
+            @Html.ActionLink(@Html.DisplayNameFor(model => model.County).ToString(), "Index", new { sortby = ViewBag.CountySort, search = ViewBag.SearchFilter, county = ViewBag.CountyFilter }, htmlAttributes: new { @class = "filterText" })
+            <span class="glyphicon @ViewBag.CountySortArrow"></span>
         </th>
         <th></th>
     </tr>

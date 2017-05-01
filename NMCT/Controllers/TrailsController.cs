@@ -18,9 +18,65 @@ namespace NMCT.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Trails
-        public ActionResult Index()
+        public ActionResult Index(string sortby, string county, string search)
         {
-            return View(db.Trail.ToList());
+            IEnumerable<Trail> trails = db.Trail.ToList();
+
+            ViewBag.Counties = trails.Select(t => t.County).Distinct().OrderBy(x => x);
+
+            //filtering
+            if (!String.IsNullOrWhiteSpace(search))
+            {
+                trails = trails.Where(t => t.Name.ToUpper().Contains(search.ToUpper()));
+                ViewBag.SearchFilter = search;
+            }
+
+            if (!String.IsNullOrWhiteSpace(county))
+            {
+                trails = trails.Where(t => t.County == county);
+                ViewBag.CountyFilter = county;
+            }
+
+            //sorting setup
+            ViewBag.NameSort = sortby == "Name" ? "Name_desc" : "Name";
+            ViewBag.CountySort = sortby == "County" ? "County_desc" : "County";
+            ViewBag.SortBy = sortby;
+
+            //sorting
+            switch (sortby)
+            {
+                case "Name":
+                    trails = trails.OrderBy(t => t.Name);
+                    ViewBag.NameSortArrow = "glyphicon-chevron-up";
+                    ViewBag.CountySortArrow = null;
+                    break;
+
+                case "Name_desc":
+                    trails = trails.OrderByDescending(t => t.Name);
+                    ViewBag.NameSortArrow = "glyphicon-chevron-down";
+                    ViewBag.CountySortArrow = null;
+                    break;
+
+                case "County":
+                    trails = trails.OrderBy(t => t.County);
+                    ViewBag.CountySortArrow = "glyphicon-chevron-up";
+                    ViewBag.NameSortArrow = null;
+                    break;
+
+                case "County_desc":
+                    trails = trails.OrderByDescending(t => t.County);
+                    ViewBag.CountySortArrow = "glyphicon-chevron-down";
+                    ViewBag.NameSortArrow = null;
+                    break;
+
+                default:
+                    trails = trails.OrderBy(t => t.TrailID);
+                    ViewBag.NameSortArrow = null;
+                    ViewBag.CountySortArrow = null;
+                    break;
+            }
+
+            return View(trails);
         }
 
         // GET: Trails/Details/5
