@@ -153,7 +153,13 @@ namespace NMCT.Controllers
                 return HttpNotFound();
             }
 
-            ViewBag.ImageUrl = db.EventPictures.FirstOrDefault(x => x.EventID == @event.EventID).PictureURL;
+            ViewBag.ImageUrl = "";
+
+            var image = db.EventPictures.FirstOrDefault(x => x.EventID == @event.EventID);
+
+            if (image != null)
+                ViewBag.ImageUrl = image.PictureURL;
+
             ViewBag.Trails = GetTrails();
             return View(@event);
         }
