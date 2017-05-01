@@ -1,0 +1,105 @@
+﻿@model IEnumerable<NMCT.Models.ContactForm>
+
+@{
+    ViewBag.Title = "Contact Forms";
+}
+
+<h2>Contact Form Management</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FormCategory)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FormStatus)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UserName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SubmissionDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AssignedUserName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.FormCategory)
+        </td>
+        <td>
+            @if (item.FormStatus == NMCT.Models.FormStatus.Submitted)
+            {
+                <span class="label-warning label"> @Html.DisplayFor(modelItem => item.FormStatus) </span>
+            }
+            else if (item.FormStatus == NMCT.Models.FormStatus.Assigned)
+            {
+                <span class="label-warning label"> @Html.DisplayFor(modelItem => item.FormStatus) </span>
+            }
+            else if (item.FormStatus == NMCT.Models.FormStatus.Assigned)
+            {
+                <span class="label-warning label"> @Html.DisplayFor(modelItem => item.FormStatus) </span>
+            }
+            else if (item.FormStatus == NMCT.Models.FormStatus.Assigned)
+            {
+                <span class="label-warning label"> @Html.DisplayFor(modelItem => item.FormStatus) </span>
+            }
+            else
+            {
+                <span class="label-primary label"> @Html.DisplayFor(modelItem => item.FormStatus) </span>
+            }
+                
+            
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UserName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.SubmissionDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td data-formid="@item.FormID" data-assigned="@item.AssignedUserName">
+            @Html.DropDownListFor(modelItem => item.AssignedUserName, (IEnumerable<SelectListItem>)ViewBag.Employees, htmlAttributes: new {@class = "userAssignment"})
+        </td>
+        <td>
+            @Html.ActionLink("Details", "ManageContactForm", new { id=item.FormID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.FormID })
+        </td>        
+    </tr>
+}
+</table>
+
+<script>
+    $(document).ready(function () {
+        $(".userAssignment").each(function () {
+            $(this).val($(this).parent('td').data('assigned'));
+        });
+
+        $(".userAssignment").change(function () {
+            $.ajax({
+                url: '@Url.Action("AssignUser", "ContactForm")',
+                type: 'POST',
+                data: {
+                    userName: $(this).val(),
+                    formID: $(this).parent('td').data('formid')
+                },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        });
+    });
+</script>

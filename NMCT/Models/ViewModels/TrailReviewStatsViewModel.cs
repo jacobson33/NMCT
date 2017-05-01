@@ -11,7 +11,7 @@ namespace NMCT.Models.ViewModels
     public class TrailReviewStatsViewModel
     {
         public int TrailID { get; set; }
-        public decimal Rating { get; set; }
+        public double Rating { get; set; }
         public int Rating1 { get; set; }
         public int Rating2 { get; set; }
         public int Rating3 { get; set; }

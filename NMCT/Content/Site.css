@@ -40,6 +40,10 @@ textarea {
     border-radius: 0 0 10px 10px;
 }
 
+.userAssignment, .statusSelector{
+    color: black;
+}
+
 /* Formatting for dropdown on navbar*/
 .login-dropdown {
     padding: 3px 8px 3px 10px;
@@ -56,21 +60,22 @@ textarea {
 /* Animations */
 body {
   -webkit-animation: background 120s cubic-bezier(1,0,0,1) infinite;
-  animation: background 120s cubic-bezier(1,0,0,1) infinite;  
+  animation: background 120s cubic-bezier(1,0,0,1) infinite;
+  
 }
 
 @-webkit-keyframes background {
-  0% { background: url("Images/bg2.jpg"); }
-  33% { background: url("Images/bg3.jpg"); }  
-  67% { background: url("Images/bg1.jpg"); }
-  100% { background: url("Images/bg2.jpg"); }
+  0% { background: url("Images/bg2.jpg"); background-repeat: no-repeat; background-attachment: fixed;}
+  33% { background: url("Images/bg3.jpg"); background-repeat: no-repeat; background-attachment: fixed;}  
+  67% { background: url("Images/bg1.jpg"); background-repeat: no-repeat; background-attachment: fixed;}
+  100% { background: url("Images/bg2.jpg"); background-repeat: no-repeat; background-attachment: fixed;}
 }
 
 @keyframes background {
-  0% { background: url("Images/bg2.jpg"); }
-  33% { background: url("Images/bg3.jpg"); }  
-  67% { background: url("Images/bg1.jpg"); }
-  100% { background: url("Images/bg2.jpg"); }
+  0% { background: url("Images/bg2.jpg"); background-repeat: no-repeat; background-attachment: fixed;}
+  33% { background: url("Images/bg3.jpg"); background-repeat: no-repeat; background-attachment: fixed;}  
+  67% { background: url("Images/bg1.jpg"); background-repeat: no-repeat; background-attachment: fixed;}
+  100% { background: url("Images/bg2.jpg"); background-repeat: no-repeat; background-attachment: fixed;}
 }
 
 /* Overlay for Create Review */
@@ -144,4 +149,19 @@ body {
 /* Selected state of the stars */
 .rating-stars ul > li.star.selected > i.fa {
   color:#FF912C;
+}
+
+/* Carousel */
+.carousel-caption {
+    background-color: rgba(0,0,0,0.45);
+    padding: 0 0 20px 5px;
+    border-radius: 4px;
+}
+    .carousel-caption p {
+        text-align: left;
+    }
+.carousel-control {
+  opacity: 0.50;
+  filter: alpha(opacity=50);
+  background-color: rgba(0, 0, 0, 0.0);
 }

@@ -182,7 +182,7 @@
         <div class="form-group controls">
             <div class="col-md-12">
                 <button type="button" class="btn btn-sm btn-danger col-md-3 col-md-offset-1 createReview_close">Close</button>
-                <button type="submit" class="btn btn-sm btn-success col-md-3 col-md-offset-4">Submit</button>
+                <button type="submit" class="btn btn-sm btn-success col-md-3 col-md-offset-4 createReview_submit">Submit</button>
             </div>
         </div>
         }
@@ -285,6 +285,7 @@
                 data: formData,
                 success:function(response){
                     $(".successMessage").toggleClass("hidden");
+                    $(".createReview_submit").toggleClass("hidden");
                     setTimeout(function(){
                         $(".successMessage").toggleClass("hidden");
                         ResetAndClose();
@@ -293,6 +294,7 @@
                 error:function(response){
                     $(".errorMessageText").text("Something went wrong, try reloading the page and try again.");
                     $(".errorMessage").toggleClass("hidden");
+                    $(".createReview_submit").toggleClass("hidden");
                     setTimeout(function(){
                         $(".errorMessage").toggleClass("hidden");
                         ResetAndClose();
@@ -308,6 +310,8 @@
         $("textarea[name='Content']").val('');
         $(".star").removeClass("selected");
         $('#createReview').popup('hide');
+        $('.createReview_submit').removeClass('hidden');
+        location.reload();
     }
 </script>
 

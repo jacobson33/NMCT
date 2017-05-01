@@ -12,10 +12,12 @@ namespace NMCT.Models
         [Key]
         public int EventID { get; set; }
 
-        public int TrailID { get; set; }
+        [Display(Name = "Trail")]
+        public int? TrailID { get; set; }
 
         [Required]
         [Display(Name = "Event Start Date")]
+        [DisplayFormat(DataFormatString = "{0:d}", ApplyFormatInEditMode = true)]
         public DateTime EventDate { get; set; }
 
         [Required]

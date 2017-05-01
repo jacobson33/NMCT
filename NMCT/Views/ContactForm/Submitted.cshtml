@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "Submitted";
+}
+
+<h2>Thank You!</h2>
+
+<div>
+    <p class="text-success"><strong>We appreciate your feedback! If we need more information, we will contact you with any questions/concerns we may have.</strong></p>
+    <br />
+    <br />
+    <p>You will be redirected to the home page in 5 seconds. You may click <a href="../">HERE</a> to go now.</p>
+</div>
+
+
+<script>
+    setTimeout(function () {
+        window.location.href = "../";
+    }, 5000);
+</script>

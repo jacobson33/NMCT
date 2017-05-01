@@ -46,7 +46,8 @@ namespace NMCT.Controllers
             stats.Rating4 = reviews.Where(t => t.Rating == 4).Count();
             stats.Rating5 = reviews.Where(t => t.Rating == 5).Count();
 
-            stats.Rating = ((stats.Rating1) + (stats.Rating2 * 2) + (stats.Rating3 * 3) + (stats.Rating4 * 4) + (stats.Rating5 * 5)) / (reviews.Count() == 0 ? 1 : reviews.Count());
+            stats.Rating = ((stats.Rating1) + (stats.Rating2 * 2) + (stats.Rating3 * 3) + (stats.Rating4 * 4) + (stats.Rating5 * 5)) / (reviews.Count() == 0 ? 1.00 : (double)reviews.Count());
+            stats.Rating = Math.Round(stats.Rating, 2);
 
             ViewBag.Stats = stats;
             ViewBag.TrailID = trail.TrailID;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using NMCT.Models;
+using NMCT.Models.ViewModels;
 
 
 namespace NMCT.Controllers
@@ -21,25 +22,23 @@ namespace NMCT.Controllers
         public ActionResult Index()
         {
             var topfive = db.Database.SqlQuery<TopFiveResults>("dbo.GetTopFiveTrails").ToList();
-            //var upcomingEvents = db.Database.SqlQuery<Event>("dbo.GetUpcomingEvents").ToList();
+            List<EventViewModel> upcomingEvents = db.Database.SqlQuery<EventViewModel>("dbo.GetUpcomingEvents").ToList();
 
-            //ViewBag.UpcomingEvents = upcomingEvents;
+            ViewBag.UpcomingEvents = upcomingEvents;
             ViewBag.TopFive = topfive;
             return View();
         }
 
         public ActionResult About()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Providing Trail Information to the Northern Michigan Cycling Community.";
 
             return View();
         }
 
         public ActionResult Contact()
         {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
+            return RedirectToAction("Create", "ContactForm");
         }
     }
 }

@@ -67,7 +67,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DateCreated)
             </td>
-            @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+            @if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
             {
                 <td>
                     @Html.ActionLink("Edit", "Edit", new { id = item.ReviewID }) |

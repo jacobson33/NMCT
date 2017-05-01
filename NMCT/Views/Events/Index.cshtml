@@ -6,7 +6,7 @@
 
 <h2>Event Listing</h2>
 
-@if (User.IsInRole("Moderator") || User.IsInRole("Manager") || User.IsInRole("Admin"))
+@if (User.IsInRole("Moderator") || User.IsInRole("Manager") || User.IsInRole("Administrator"))
 { 
     <p>
         @Html.ActionLink("Add New Event", "Create")
@@ -27,31 +27,27 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.EventName)
+            @Html.ActionLink(Html.DisplayFor(modelItem => item.EventName).ToString(), "Details", new {id = item.EventID })
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.EventDate)
         </td>        
-        @if (User.IsInRole("Moderator") && !(User.IsInRole("Admin") || User.IsInRole("Manager")))
+        @if (User.IsInRole("Moderator") && !(User.IsInRole("Administrator") || User.IsInRole("Manager")))
         {
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.EventID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.EventID })
+                @Html.ActionLink("Edit", "Edit", new { id = item.EventID })
             </td>
         }
-        else if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+        else if (User.IsInRole("Administrator") || User.IsInRole("Manager"))
         {
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.EventID }) |
-                @Html.ActionLink("Details", "Details", new { id = item.EventID }) |
                 @Html.ActionLink("Delete", "Delete", new { id = item.EventID })
             </td>
         }
-        else if (User.IsInRole("User") || !User.Identity.IsAuthenticated)
+        else
         {
-            <td>
-                @Html.ActionLink("Details", "Details", new { id = item.EventID })
-            </td>
+            <td></td>
         }
     </tr>
 }

@@ -16,7 +16,8 @@
     <aside class="pull-right">
         @if (Model.EventPictures.Count > 0)
         {
-            <img class="img-rounded img-responsive" src="@Model.EventPictures[0].PictureURL" />
+            <p>Pictures:</p>
+            <img class="img-rounded img-responsive" src="@Model.EventPictures.First().PictureURL" />
         }
     </aside>
 
@@ -69,7 +70,7 @@
 
 
 <div class="clearfix col-md-12">
-    @if (User.IsInRole("Moderator") || User.IsInRole("Admin") || User.IsInRole("Manager"))
+    @if (User.IsInRole("Moderator") || User.IsInRole("Administrator") || User.IsInRole("Manager"))
     {
         <p>
             @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |

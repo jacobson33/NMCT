@@ -1,0 +1,122 @@
+﻿@model NMCT.Models.ContactForm
+
+@{
+    ViewBag.Title = "Manage Contact Form";
+}
+
+<h2>Contact Form</h2>
+
+<div>
+    <h4>Submission Details</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.FormCategory)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FormCategory)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FormStatus)
+        </dt>
+
+        <dd>
+            @Html.EnumDropDownListFor(model => model.FormStatus, htmlAttributes: new {@class = "statusSelector" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AssignedUserName)
+        </dt>
+
+        <dd>
+            @Html.DropDownListFor(model => model.AssignedUserName, (IEnumerable<SelectListItem>)ViewBag.Employees, htmlAttributes: new { @class = "userAssignment" })
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubmissionDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubmissionDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ResolvedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ResolvedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Content)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Content)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Back to List", "Index")
+</p>
+
+<script>
+    $(document).ready(function () {
+        $(".userAssignment").val('@Model.AssignedUserName');
+
+        $(".userAssignment").change(function () {
+            $.ajax({
+                url: '@Url.Action("AssignUser", "ContactForm")',
+                type: 'POST',
+                data: {
+                    userName: $(this).val(),
+                    formID: '@Model.FormID'
+                },
+                success: function (response) {
+                    alert(response);
+                    window.location.reload();
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        });
+
+        $(".statusSelector").change(function () {
+            $.ajax({
+                url: '@Url.Action("SetStatus", "ContactForm")',
+                type: 'POST',
+                data: {
+                    status: $(this).val(),
+                    formID: '@Model.FormID'
+                },
+                success: function (response) {
+                    alert(response);
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        });
+    });
+</script>

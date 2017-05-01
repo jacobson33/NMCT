@@ -7,6 +7,8 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -22,13 +24,15 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("Trails", "Index", "Trails")</li>
+                    <li>@Html.ActionLink("Events", "Index", "Events")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>                    
                     @if (User.IsInRole("Administrator"))
                     {
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Site Administration
+                                User Admin
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
@@ -41,12 +45,14 @@
                     {
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                                Data Administration
+                                Site Admin
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("Manage Trails", "Index", "Trails")</li>
                                 <li>@Html.ActionLink("Manage Reviews", "Index", "Reviews")</li>
+                                <li>@Html.ActionLink("Manage Events", "Index", "Events")</li>
+                                <li>@Html.ActionLink("Manage Feedback", "Index", "ContactForm")</li>
                             </ul>
                         </li>
                     }
@@ -63,12 +69,14 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
     <script>
         $(document).ready(function () {
             $('#createReview').popup({
                 transition: 'all 0.2s', opacity: 0.75
+            });
+            $('.datepicker').datepicker({
+                showOtherMonths: true,
+                selectOtherMonths: true
             });
         });
     </script>

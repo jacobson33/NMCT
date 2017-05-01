@@ -6,7 +6,6 @@
 
 <h2>Event Management | Create</h2>
 
-
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
@@ -15,10 +14,10 @@
         <h4>Event Information</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
+        <div class="form-group form-group-sm">
             @Html.LabelFor(model => model.TrailID, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.TrailID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.TrailID, (IEnumerable<SelectListItem>)ViewBag.Trails, htmlAttributes: new { @class = "trailSelector form-control " })
                 @Html.ValidationMessageFor(model => model.TrailID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -26,7 +25,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EventDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EventDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.EventDate, new { htmlAttributes = new { @class = "form-control datepicker" } })
                 @Html.ValidationMessageFor(model => model.EventDate, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -42,7 +41,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.EventDescription, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EventDescription, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.EventDescription, new { @class = "form-control", @rows = 8 })
                 @Html.ValidationMessageFor(model => model.EventDescription, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -70,6 +69,8 @@
                 @Html.ValidationMessageFor(model => model.ContactUrl, "", new { @class = "text-danger" })
             </div>
         </div>
+
+        <p>You will be able to add pictures after the event is created.</p>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
