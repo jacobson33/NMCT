@@ -13,7 +13,7 @@
         <h4>@Html.DisplayFor(model => model.EventDate)</h4>
     </div>
 
-    <aside class="pull-right">
+    <aside class="pull-right col-md-6">
         @if (Model.EventPictures.Count > 0)
         {
             <p>Pictures:</p>
@@ -33,7 +33,7 @@
     {
         <div>
             <h4>Trail Information</h4>
-            @Html.ActionLink("View Trail Page", "Details", "Trails", new { id = Model.TrailID })
+            @Html.ActionLink("View Trail Page", "Details", "Trails", new { id = Model.TrailID }, null)
         </div>
         <hr />
     }
