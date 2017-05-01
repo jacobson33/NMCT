@@ -127,10 +127,10 @@ namespace NMCT.Controllers
         {
             if (url.Trim() == "")
                 url = null;
-
-            List<EventPictures> ep = db.EventPictures.Where(p => p.EventID == eventID).ToList();
-            ep.ForEach(p => db.EventPictures.Remove(p));
-
+            
+            db.EventPictures.RemoveRange(db.EventPictures.Where(x => x.EventID == eventID));
+            db.SaveChanges();
+            
             if (url != null)
                 db.EventPictures.Add(new EventPictures() { PictureURL = url, EventID = eventID });
 

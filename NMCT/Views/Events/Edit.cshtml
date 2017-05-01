@@ -90,7 +90,7 @@
             <input type="button" class="btn btn-info" value="Save URL" id="saveImageUrl" />
         </div>
     </div>
-    <div id="successMessage" class="hidden panel panel-success">
+    <div id="successMessage" class="hidden panel panel-success col-md-12">
         <h4>Success!</h4>
     </div>
 </div>
@@ -114,7 +114,7 @@
                 url: '@Url.Action("SaveImageUrl")',
                 type: 'POST',
                 data: {
-                    url: $("#imageUrl").val(),
+                    url: $("#imageURL").val(),
                     eventID: '@Model.EventID'
                 },
                 success: function (response) {
@@ -125,7 +125,7 @@
                     }, 2500)
                 },
                 error: function (response) {
-
+                    console.log(response);
                 }
             });
         });
